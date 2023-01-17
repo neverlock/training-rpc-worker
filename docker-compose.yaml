@@ -1,0 +1,40 @@
+version: '2'
+services:
+   rabbit-mq:
+      container_name: rabbit-mq
+      image: rabbitmq:3-management
+      hostname: rabbit-mq
+      ports: 
+         - "8530:15672"
+         - "5671-5672:5671-5672"
+      restart: always
+      networks:
+         - test_net
+      environment:
+         TZ: Asia/Bangkok
+      cpus: 1
+      mem_limit: 1g
+
+   rpc-consumer:
+      build:
+         context: ./
+         dockerfile: Dockerfile
+      image: rpcworker:v1
+      hostname: rpc-consumer
+      restart: always
+      networks:
+         - test_net
+      environment:
+         TZ: Asia/Bangkok
+      volumes:
+         - ./Consumer:/app
+      working_dir: /app
+      cpus: 1
+      mem_limit: 1g
+      stdin_open: true
+      tty: true
+      scale: 1
+      command: python consumer.py
+
+networks:
+   test_net:
