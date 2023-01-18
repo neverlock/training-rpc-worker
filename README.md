@@ -15,4 +15,4 @@ docker compose up -d
 
 ## Test
 
-```python consumer.py```
+```python3 producer.py```
